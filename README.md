@@ -1,2 +1,2 @@
 # Broom
-Broom helps find and delete files or directories on windows.
+Broom helps you find and delete files or directories on windows.

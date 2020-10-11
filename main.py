@@ -1,6 +1,8 @@
 import sys, getopt
+import platform
 from BroomCore import BroomCore
 from ItemType import ItemType
+from OsType import OsType
 
 def main(argv):
     try:
@@ -32,7 +34,16 @@ def main(argv):
             _itemType = ItemType.file
         elif (_dir == True and _file == False):
             _itemType = ItemType.directory
-        broom = BroomCore(_itemType, _path, _name)
+        if platform.system() == "Windows":
+            _osType = OsType.windows
+        elif platform.system() == "Linux":
+            _osType = OsType.linux
+        elif platform.system() == "Darwin":
+            _osType = OsType.macos
+        else:
+            print("Unidentified os! Defaulting to linux ...")
+            _osType = OsType.linux
+        broom = BroomCore(_itemType, _path, _name, _osType)
         broom.search()
     except getopt.GetoptError:
         print('Invalid arguments!')

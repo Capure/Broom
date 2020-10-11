@@ -3,14 +3,16 @@ import re
 import sys
 import shutil
 from ItemType import ItemType
+from OsType import OsType
 from prettytable import PrettyTable
 from Question import Question
 
 class BroomCore:
-    def __init__(self, itemType, path, name):
+    def __init__(self, itemType, path, name, osType):
         self.itemType = itemType
         self.path = path
         self.name = name
+        self.osType = osType
 
     def __scandir(self, dirname, counter):
         subfolders = [f.path for f in os.scandir(dirname) if f.is_dir()]
@@ -34,8 +36,17 @@ class BroomCore:
         temp = re.sub(self.name, f'{self.name}||||||||||', path_to_parse)
         return temp.split('||||||||||')[0] if temp != path_to_parse else ''
 
-    def __parse_path_file(self, path_to_parse):
+    def __parse_path_file_windows(self, path_to_parse):
         return (path_to_parse.split('\\')[-1] == self.name)
+
+    def __parse_path_file_unix(self, path_to_parse):
+        return (path_to_parse.split('/')[-1] == self.name)
+
+    def __parse_path_file(self, path_to_parse):
+        if self.osType == OsType.windows:
+            return self.__parse_path_file_windows(path_to_parse)
+        elif self.osType == OsType.linux or self.osType == OsType.macos:
+            return self.__parse_path_file_unix(path_to_parse)
 
     def __file_search(self):
         paths = []
